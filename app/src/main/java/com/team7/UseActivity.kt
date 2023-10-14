@@ -21,10 +21,12 @@ class UseActivity : AppCompatActivity() {
         initFragment()
         replaceFragment()
     }
+    //첫화면
     private fun initFragment(){
         profileFragment =ProfileFragment.newInstance()
         supportFragmentManager.beginTransaction().add(R.id.fragmentFrame,profileFragment).commit()
     }
+    //fragment 바꾸기
     private fun replaceFragment(){
         binding.bottomNavBar.setOnItemSelectedListener{
             when(it.itemId){
