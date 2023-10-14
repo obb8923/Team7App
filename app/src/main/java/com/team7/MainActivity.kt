@@ -17,14 +17,12 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.team7.databinding.ActivityMainBinding
 
-
-//sha1 - B9:78:02:9F:5A:FB:2F:C4:ED:9B:73:46:50:B5:4B:5B:60:A6:F0:04
 class MainActivity : AppCompatActivity() {
     companion object
     {
         private const val TAG = "GoogleActivity"
         private const val RC_SIGN_IN = 9001
-       // private const val webClientId ="945186122771-1lkmcbftr2lell1o1kc0hm86t8oqda3f.apps.googleusercontent.com"
+        // private const val webClientId ="945186122771-1lkmcbftr2lell1o1kc0hm86t8oqda3f.apps.googleusercontent.com"
         private const val webClientId="945186122771-mht9a4ktrudvuhckfbi9etordjpir4on.apps.googleusercontent.com"
     }
     private lateinit var googleSignInButton: SignInButton
@@ -34,9 +32,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding =ActivityMainBinding.inflate(layoutInflater)
-        val  view =binding.root
-        setContentView(view)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         //구글 로그인 옵션 구성
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -49,11 +46,15 @@ class MainActivity : AppCompatActivity() {
 
         //Firebase Auth 초기화
         auth = Firebase.auth
-
         //로그인 버튼
-        googleSignInButton=binding.mainLoginButton
+        googleSignInButton=binding.LoginButton
         googleSignInButton.setOnClickListener{
             signIn()
+        }
+        var testB = binding.testButton
+        testB.setOnClickListener{
+            println("asdadadsaadsaaaaaaaaaaaaaa")
+            Toast.makeText(this,"testClear",Toast.LENGTH_LONG).show()
         }
     }
 
@@ -62,6 +63,7 @@ class MainActivity : AppCompatActivity() {
         // 사용자가 로그인되어 있는지 확인하고 UI를 업데이트
         // Check if user is signed in (non-null) and update UI accordingly.
         val currentUser = auth.currentUser
+
         updateUI(currentUser)
     }
 
@@ -113,11 +115,10 @@ class MainActivity : AppCompatActivity() {
     private fun updateUI(user: FirebaseUser?) {
         if(user == null){
             Toast.makeText(this,"Google 로그인 실패",Toast.LENGTH_SHORT).show()
-        }else{
-            val intent = Intent(this,logoutActivity::class.java)
+        }
+        else{
+            val intent = Intent(this,UseActivity::class.java)
             startActivity(intent)
         }
     }
-
-
 }
