@@ -1,23 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+
     <item
         android:id="@+id/bottomNavProfile"
-        android:title=""
+        android:title="@string/profile"
         android:icon="@drawable/baseline_person_24"
+        android:iconTint="@color/bottom_nav_icon"
         />
     <item
         android:id="@+id/bottomNavRecord"
-        android:title=""
+        android:title="@string/record"
         android:icon="@drawable/baseline_library_books_24"
         />
     <item
         android:id="@+id/bottomNavCommunity"
-        android:title=""
+        android:title="@string/community"
         android:icon="@drawable/baseline_people_24"
         />
     <item
         android:id="@+id/bottomNavMore"
-        android:title=""
+        android:title="@string/more"
         android:icon="@drawable/baseline_more_horiz_24"
         />
 </menu>

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.SignInButton
@@ -24,9 +25,10 @@ class MainActivity : AppCompatActivity() {
         private const val RC_SIGN_IN = 9001
         // private const val webClientId ="945186122771-1lkmcbftr2lell1o1kc0hm86t8oqda3f.apps.googleusercontent.com"
         private const val webClientId="945186122771-mht9a4ktrudvuhckfbi9etordjpir4on.apps.googleusercontent.com"
+
     }
-    private lateinit var googleSignInButton: SignInButton
     private lateinit var auth: FirebaseAuth
+    private lateinit var googleSignInButton: SignInButton
     private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var binding: ActivityMainBinding
 
@@ -51,20 +53,10 @@ class MainActivity : AppCompatActivity() {
         googleSignInButton.setOnClickListener{
             signIn()
         }
-        var testB = binding.testButton
-        testB.setOnClickListener{
-            println("asdadadsaadsaaaaaaaaaaaaaa")
-            Toast.makeText(this,"testClear",Toast.LENGTH_LONG).show()
-        }
     }
 
     override fun onStart() {
         super.onStart()
-        // 사용자가 로그인되어 있는지 확인하고 UI를 업데이트
-        // Check if user is signed in (non-null) and update UI accordingly.
-        val currentUser = auth.currentUser
-
-        updateUI(currentUser)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -79,7 +71,7 @@ class MainActivity : AppCompatActivity() {
                 //account = 모든 구글 로그인 정보
                 val account = task.getResult(ApiException::class.java)!!
                 Log.d(TAG, "firebaseAuthWithGoogle:" + account.id)
-                firebaseAuthWithGoogle(account.idToken!!)
+                firebaseAuthWithGoogle(account.idToken!!,account)
             } catch (e: ApiException) {
                 // Google Sign In failed, update UI appropriately
                 Log.w(TAG, "Google sign in failed", e)
@@ -87,7 +79,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun firebaseAuthWithGoogle(idToken: String) {
+    private fun firebaseAuthWithGoogle(idToken: String,account:GoogleSignInAccount) {
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
@@ -118,6 +110,11 @@ class MainActivity : AppCompatActivity() {
         }
         else{
             val intent = Intent(this,UseActivity::class.java)
+            intent.apply {
+                this.putExtra("user_uid",user.uid)
+                this.putExtra("user_displayName",user.displayName)
+                this.putExtra("user_phoneNumber",user.phoneNumber)
+            }
             startActivity(intent)
         }
     }
