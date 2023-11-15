@@ -7,18 +7,17 @@
         android:id="@+id/bottomNavProfile"
         android:title="@string/profile"
         android:icon="@drawable/baseline_person_24"
-        android:iconTint="@color/bottom_nav_icon"
         />
     <item
         android:id="@+id/bottomNavRecord"
         android:title="@string/record"
         android:icon="@drawable/baseline_library_books_24"
         />
-    <item
+    <!--<item
         android:id="@+id/bottomNavCommunity"
         android:title="@string/community"
         android:icon="@drawable/baseline_people_24"
-        />
+        />-->
     <item
         android:id="@+id/bottomNavMore"
         android:title="@string/more"

@@ -10,6 +10,8 @@
         android:layout_height="wrap_content"
         android:text="@string/community"
         android:textSize="@dimen/top_menu_name_size"
+        android:textColor="@color/black"
+        android:textStyle="bold"
         />
 
 </LinearLayout>

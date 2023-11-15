@@ -12,14 +12,13 @@ import com.google.firebase.ktx.Firebase
 
 class SplashActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
         auth = Firebase.auth
 
         Handler().postDelayed({
-//            val intent = Intent(this, MainActivity::class.java)
+//            val intent = Intent(this, UseActivity::class.java)
 //            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
 //            startActivity(intent)
             finish()
@@ -33,10 +32,6 @@ class SplashActivity : AppCompatActivity() {
         val currentUser = auth.currentUser
         updateUI(currentUser)
     }
-    override fun onBackPressed() {
-        super.onBackPressed()
-    }
-
     private fun updateUI(user: FirebaseUser?) {
         if(user == null){
             val intent = Intent(this,MainActivity::class.java)

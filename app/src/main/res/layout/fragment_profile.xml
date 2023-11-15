@@ -1,23 +1,172 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background"
 
     >
-
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/profile"
-        android:textSize="@dimen/top_menu_name_size"
-        />
-    <TextView
-        android:id="@+id/user_display_name"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text=""
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/profile"
+            android:textSize="@dimen/top_menu_name_size"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:layout_marginBottom="@dimen/top_menu_bottom_margin"
+            />
+
+    </LinearLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp"
+            >
+            <android.widget.Button
+                android:id="@+id/profile_profile_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="1000dp"
+                android:maxWidth="1000dp"
+                android:layout_marginBottom="@dimen/top_menu_bottom_margin"
+                android:drawableStart="@drawable/profile_profile_button_design"
+                android:text="@string/nullUserName"
+                android:textSize="20sp"
+                android:background="@drawable/profile_button_design"
+                android:drawableEnd="@drawable/baseline_keyboard_arrow_right_24"
+                />
+
+            <GridLayout
+                android:id="@+id/daysGrid"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:columnCount="3"
+                android:padding="10dp"
+                >
+
+                <TextView
+                    android:id="@+id/allDayText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_gravity="center_horizontal"
+
+                    android:text="@string/allDayText"
+                    android:textSize="@dimen/sub_title_size"
+                    />
+                <TextView
+                    android:id="@+id/workoutDayText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/workoutDayText"
+                    android:textSize="@dimen/sub_title_size"
+                    />
+                <TextView
+                    android:id="@+id/dietDayText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/dietDayText"
+                    android:textSize="@dimen/sub_title_size"
+                    />
+                <TextView
+                    android:id="@+id/allDay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/nullDays"
+                    android:textSize="@dimen/sub_title_size"
+                    />
+                <TextView
+                    android:id="@+id/workoutDay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_gravity="center_horizontal"
+
+                    android:text="@string/nullDays"
+                    android:textSize="@dimen/sub_title_size"
+                    />
+                <TextView
+                    android:id="@+id/dietDay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+
+                    android:text="@string/nullDays"
+                    android:textSize="@dimen/sub_title_size"
+                    />
+            </GridLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="100"
+                android:layout_margin="@dimen/top_menu_bottom_margin"
+                android:background="?android:attr/listDivider" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
+                <TextView
+                    android:id="@+id/goalWeight"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/goalWeight"
+                    android:textSize="@dimen/notice_text_size"
+                    />
+                <android.widget.Button
+                    android:id="@+id/weightCorrectionButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/correction"
+                    android:layout_weight="0"
+                    />
+            </LinearLayout>
+            <TextView
+                android:id="@+id/currentWeight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="@string/currentWeight"
+                android:textSize="@dimen/notice_text_size"
+                />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="100"
+                android:layout_margin="@dimen/top_menu_bottom_margin"
+                android:background="?android:attr/listDivider" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="나의 권장 칼로리"
+                />
+        </LinearLayout>
+    </ScrollView>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="100"
+        android:progress="20"
         />
+
 
 </LinearLayout>
