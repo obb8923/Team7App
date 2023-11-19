@@ -1,10 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:background="@color/white"
+    >
 
+    <Button
+        android:id="@+id/saveButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="저장하기"
+        android:layout_above="@id/cancelButton"
+        android:layout_centerHorizontal="true"
+        />
+
+    <!-- 두 번째 버튼 (첫 번째 버튼 위) -->
+    <Button
+        android:id="@+id/cancelButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="취소"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        />
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/saveButton"
+        android:layout_centerInParent="true"
+        >
+
+        <LinearLayout
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <LinearLayout
+                android:id="@+id/customSeekBarContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center"
+                >
+            </LinearLayout>
+        </LinearLayout>
+    </HorizontalScrollView>
 
     <TextView
         android:layout_width="wrap_content"
@@ -14,99 +58,6 @@
         android:textColor="@color/black"
         android:textStyle="bold"
         android:layout_marginBottom="@dimen/top_menu_bottom_margin"
-
         />
-    <LinearLayout
-        android:id="@+id/recordDetail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
-        <TextView
-            android:id="@+id/dd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="이름"
-            android:textSize="@dimen/top_menu_name_size"
-            />
-        <EditText
-            android:id="@+id/nameValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:inputType="text"
-            android:text="Name" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="칼로리"
-            android:textSize="@dimen/top_menu_name_size"
-            />
-        <EditText
-            android:id="@+id/kcalValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:inputType="text"
-            android:text="칼" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="탄수화물"
-            android:textSize="@dimen/top_menu_name_size"
-            />
-        <EditText
-            android:id="@+id/carbohydratesValue"
 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:inputType="text"
-            android:text="탄수" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="단백질"
-            android:textSize="@dimen/top_menu_name_size"
-            />
-        <EditText
-            android:id="@+id/proteinValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:inputType="text"
-            android:text="단백질" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="지방"
-            android:textSize="@dimen/top_menu_name_size"
-            />
-        <EditText
-            android:id="@+id/fatValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:inputType="text"
-            android:text="지방" />
-        <Button
-            android:id="@+id/recordB"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="저장하기" />
-        <Button
-            android:id="@+id/recordBb"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="건강은 챙겼지만 기록은 하지 않겠습니다!" />
-    </LinearLayout>
-
-
-
-
-</LinearLayout>
+</RelativeLayout>

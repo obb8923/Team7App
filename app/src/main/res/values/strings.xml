@@ -14,7 +14,7 @@
     <string name="correction">수정하기</string>
     <string name="userInformWeight">몸무게: %1$.1fkg</string>
     <string name="userInformHeight">키: %1$.1fcm </string>
-
+    <string name="progressText">%1$s - %2$s %3$s/%4$s</string>
     <string name="logoutConfirm">"로그아웃 하시겠습니까?"</string>
     <string name="backPressedTwice">"한 번 더 누르면 종료합니다."</string>
     <string name="allDayText">전체</string>

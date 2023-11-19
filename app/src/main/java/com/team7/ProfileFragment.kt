@@ -9,8 +9,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.RadioGroup
+import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.play.core.integrity.p
+import com.google.android.play.integrity.internal.c
+import com.google.android.play.integrity.internal.f
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.team7.databinding.FragmentProfileBinding
@@ -20,43 +30,61 @@ import java.util.Calendar
 
 class ProfileFragment:Fragment() {
     companion object{
-        fun newInstance(userDisplayName: String?,userUid:String?): ProfileFragment {
+        fun newInstance(userDisplayName: String?,userUid:String?,ds:String?,wds:String?,dds:String?): ProfileFragment {
             val fragment = ProfileFragment()
             val args = Bundle()
             args.putString("userDisplayName", userDisplayName)
             args.putString("userUid", userUid)
+            args.putString("ds",ds)
+            args.putString("wds",wds)
+            args.putString("dds",dds)
             fragment.arguments = args
             return fragment
         }
     }
+    private var toast: Toast? = null
     private lateinit var binding : FragmentProfileBinding
     private lateinit var db: FirebaseFirestore
     private lateinit var uid : String
     private lateinit var userDisplayName :String
 
+    private var days:String? ="null"
+    private var workoutDays:String? ="null"
+    private var dietDays:String? ="null"
 
-    /*private val currentDate = LocalDate.now()//시간
+
+    private val currentDate = LocalDate.now()//시간
     private val formatter = DateTimeFormatter.ofPattern("yyyyMMdd") //날짜 형식 포맷 지정
-    private val formattedDate = currentDate.format(formatter)*/
+    private val formattedDate = currentDate.format(formatter)
 
     private var userInform = hashMapOf(
         "name" to "null",
+        "gender" to "",
+        "age" to 0,
         "height" to 0.0f,
         "weight" to 0.0f,
         "goalWeight" to 0.0f,
         "lastWeight" to 0.0f,
-        "day" to 0,
+        "lastWorkout" to "",
         "days" to 1,
         "workoutDay" to 0,
         "dietDay" to 0
     )
+
+    private val foodRecords = mutableListOf<FoodRecordEntry>()
+    private lateinit var recordAdapter: MainRecordFragment.RecordAdapter
+    private var lastVisibleDocumentSnapshot: DocumentSnapshot? = null
+    private var isLoading = false
+    private lateinit var fabIconSelection: FloatingActionButton
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         db = Firebase.firestore
         userDisplayName=arguments?.getString("userDisplayName")!!
         uid =arguments?.getString("userUid")!!
-        //calorie progress bar
-        kcalProgress()
+        days = arguments?.getString("ds")!!
+        workoutDays = arguments?.getString("wds")!!
+        dietDays = arguments?.getString("dds")!!
 
     }
     override fun onCreateView(
@@ -64,76 +92,68 @@ class ProfileFragment:Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         binding = FragmentProfileBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onStart() {
         super.onStart()
-        daysUpdate()
-        //read weight data at firestore
-        weightUpdate()
+        //makeSet()
+        layoutValueUpdate()
+        progressMax()
+        //loadFoodRecords(initialLoad = true)
 
     }
     override fun onResume() {
         super.onResume()
         val context = requireContext()
-        profileButton()
+        profileName()
         isFirstTimeOpen(context)
-        weightCorrectionButton()
-
+        correctionButton()
+        workoutCheck()
+    }
+    override fun onPause() {
+        super.onPause()
+        toast?.cancel()
     }
     override fun onDestroyView() {
         super.onDestroyView()
         binding = FragmentProfileBinding.bind(requireView()) // binding 해제
     }
-
-    private fun profileButton(){
-        val profileButton = binding.profileProfileButton
-        profileButton.text =userDisplayName
-        profileButton.setOnClickListener {
-                val intent = Intent(getActivity(),ProfileSettingActivity::class.java)
-                intent.apply {
-                    this.putExtra("user_name",userDisplayName)
-                    this.putExtra("user_uid",uid)
-            }
-                startActivity(intent)
-        }
+    private fun profileName(){
+        val userName = binding.userName
+        userName.text =userDisplayName
     }
-
+    private fun layoutValueUpdate(){
+        daysUpdate()
+        weightUpdate()
+    }
     private fun daysUpdate(){
-        //전체 운동 식단
+        // 전체|운동|식단
         val allDay = binding.allDay
         val workoutDay = binding.workoutDay
         val dietDay = binding.dietDay
         //update
-        val ref = db.collection(uid).document("userInformation")
-        ref.get()
-            .addOnSuccessListener { document->
-                val days = document.getLong("days") ?: 0 // Use 0 if "days" is null
-                val daysString = days.toString()
-                allDay.text = getString(R.string.nullDays,daysString)
-                val workoutDays = document.getLong("workoutDay") ?: 0 // Use 0 if "days" is null
-                val workoutDaysString = workoutDays.toString()
-                workoutDay.text = getString(R.string.nullDays,workoutDaysString)
-                val dietDays = document.getLong("dietDay") ?: 0 // Use 0 if "days" is null
-                val dietDaysString = dietDays.toString()
-                dietDay.text = getString(R.string.nullDays,dietDaysString)
-            }
+        if(days=="null") {
+            val ref = db.collection(uid).document("userInformation")
+            ref.get()
+                .addOnSuccessListener { document ->
+                    days = (document.getLong("days") ?: 0).toString() // Use 0 if "days" is null
+                    workoutDays =
+                        (document.getLong("workoutDay") ?: 0).toString() // Use 0 if "days" is null
+                    dietDays =
+                        (document.getLong("dietDay") ?: 0).toString() // Use 0 if "days" is null
+                }
+        }
+        allDay.text = getString(R.string.nullDays, days)
+        workoutDay.text = getString(R.string.nullDays, workoutDays)
+        dietDay.text = getString(R.string.nullDays, dietDays)
 
     }
 
-
-
-    private fun weightCorrectionButton(){
-        var w:Float=0.0f
-        db.collection(uid).document("userInformation")
-            .get().addOnSuccessListener { document->
-                w = document.getDouble("weight")!!.toFloat()
-            }
-        val weightButton = binding.weightCorrectionButton
-        weightButton.setOnClickListener {
+    private fun correctionButton(){
+        val button = binding.profileProfileButton
+        button.setOnClickListener {
             // 다이얼로그 빌더 생성
             val builder = AlertDialog.Builder(context)
 
@@ -143,18 +163,42 @@ class ProfileFragment:Fragment() {
             builder.setView(dialogView)
             // 다이얼로그 버튼 클릭 이벤트 설정
             builder.setPositiveButton("확인") { dialog, which ->
-                // 확인 버튼 클릭 시 수행할 동작
-                // 목표, 현재 몸무게 수정 및 표시
-                val editText1 = dialogView.findViewById<EditText>(R.id.dialog)
-                val editText2 = dialogView.findViewById<EditText>(R.id.dialog_et)
+                // 아래는 확인 버튼 클릭 시 수행할 동작
+                // 정보 수정 및 표시
+                val radioGroup = dialogView.findViewById<RadioGroup>(R.id.select_sex)
+                var selectedSex:String ="male"
+                val editText0 = dialogView.findViewById<EditText>(R.id.age)
+                val editText1 = dialogView.findViewById<EditText>(R.id.height)
+                val editText2 = dialogView.findViewById<EditText>(R.id.goal_weight)
+                val editText3 = dialogView.findViewById<EditText>(R.id.current_weight)
+                val w0 = editText0.text.toString().toIntOrNull() ?: 0
+                val w1 = editText1.text.toString().toFloatOrNull() ?: 0.0f
+                val w2 = editText2.text.toString().toFloatOrNull() ?: 0.0f
+                val w3 = editText3.text.toString().toFloatOrNull() ?: 0.0f
+                radioGroup.setOnCheckedChangeListener{group,checkedId->
+                    when(checkedId){
+                        R.id.male->selectedSex = "male"
+                        R.id.female->selectedSex="female"
+                    }
+                }
+                if(w0>0&&w1>0.0f&&w2>0.0f&&w3>0.0f) {
+                    //유저 정보 변경 - 몸무게
 
-                //유저 정보 변경 - 몸무게
-                val ref = db.collection(uid).document("userInformation")
-                ref.update("lastWeight",w)
-                ref.update("weight",editText2.text.toString().toFloatOrNull() ?: 0.0f)
-                ref.update("goalWeight",editText1.text.toString().toFloatOrNull() ?: 0.0f)
-                weightUpdate()
-
+                    val ref = db.collection(uid).document("userInformation")
+                    ref .get().addOnSuccessListener { document->
+                        ref.update("lastWeight", document.getDouble("weight")!!.toFloat())
+                    }
+                    ref.update(
+                        mapOf(
+                            "gender" to selectedSex,
+                            "age" to w0,
+                            "height" to w1,
+                            "goalWeight" to w2,
+                            "weight" to w3
+                        )
+                    )
+                    weightUpdate()
+                }
             }
             // 다이얼로그 생성 및 표시
             val dialog = builder.create()
@@ -169,9 +213,9 @@ class ProfileFragment:Fragment() {
             val currentWeight= document.getDouble("weight")!!.toFloat()
             val goalWeight = document.getDouble("goalWeight")!!.toFloat()
             val lastWeight = document.getDouble("lastWeight")!!.toFloat()
+            val height = document.getDouble("height")!!.toFloat()
             goalWeightTextView.text = getString(R.string.goalWeight,goalWeight)
             //현재 몸무게가 저번 몸무게 보다 크거나 같다면...
-            Log.d(currentWeight.toString(),"22")
             if(currentWeight>=lastWeight){
                 currentWeightTextView.text = getString(R.string.currentWeight,currentWeight,"+",currentWeight-lastWeight)
             }else{// 작다면 ...
@@ -182,12 +226,62 @@ class ProfileFragment:Fragment() {
 
 
     }
+    private fun makeSet(){
+        val ref = db.collection(uid)
+            .document("userInformation")
+        ref.set(userInform)
+    }
+/*
+    private fun firstInput(){
+        //유저 정보 set 만들기
+        val ref = db.collection(uid)
+            .document("userInformation")
+        ref.set(userInform)
+        //성별, 나이 , 키 ,몸무게 입력 dialog 띄우기
+        // 다이얼로그 빌더 생성
+        val builder = AlertDialog.Builder(context)
+
+        // XML 레이아웃을 이용하여 다이얼로그 뷰 설정
+        val inflater = layoutInflater
+        val dialogView = inflater.inflate(R.layout.first_input, null)
+        builder.setView(dialogView)
+        // 다이얼로그 버튼 클릭 이벤트 설정
+        builder.setPositiveButton("확인") { dialog, which ->
+            // 확인 버튼 클릭 시 수행할 동작
+            val radioGroup = dialogView.findViewById<RadioGroup>(R.id.select_sex)
+            var selectedSex:String = "female"
+            val age = dialogView.findViewById<EditText>(R.id.age)
+            val height = dialogView.findViewById<EditText>(R.id.height)
+            val weight = dialogView.findViewById<EditText>(R.id.weight)
+            radioGroup.setOnCheckedChangeListener{group,checkedId->
+                when(checkedId){
+                    R.id.male->selectedSex = "male"
+                    R.id.female->selectedSex="female"
+                }
+            }
+            val ageValue = age.text.toString().toIntOrNull() ?: 0
+            val heightValue = height.text.toString().toFloatOrNull() ?: 0.0f
+            val weightValue = weight.text.toString().toFloatOrNull() ?: 0.0f
+            ref.update(
+                mapOf(
+                    "gender" to selectedSex,
+                    "age" to ageValue,
+                    "height" to heightValue,
+                    "weight" to weightValue
+                )
+            )
+        }
+        // 다이얼로그 생성 및 표시
+        val dialog = builder.create()
+        dialog.show()
+    }
+*/
+
     private fun isFirstTimeOpen(context: Context): Boolean {
         val prefName = "MyAppPreferences"
         val lastOpenDate = "lastOpenDate"
         val preferences = context.getSharedPreferences(prefName, Context.MODE_PRIVATE)
-        val lastOpenTime = preferences.getLong(lastOpenDate, 0)
-
+        var lastOpenTime = preferences.getLong(lastOpenDate, 0)
         // 현재 날짜와 마지막으로 열었던 날짜를 비교하여 첫 실행 여부를 확인
         val calendar = Calendar.getInstance()
         val currentTime = calendar.timeInMillis
@@ -195,10 +289,11 @@ class ProfileFragment:Fragment() {
         return if (lastOpenTime == 0L){
             // 어플리케이션을 처음 실행하는 경우
             //유저 정보 set 만들기
-            db.collection(uid)
+            val ref = db.collection(uid)
                 .document("userInformation")
-                .set(userInform)
-
+            ref.set(userInform)
+            //1700367445507
+            //layoutValueUpdate()
             // 마지막 열었던 날짜를 현재 날짜로 업데이트
             preferences.edit().putLong(lastOpenDate, currentTime).apply()
             true
@@ -212,7 +307,6 @@ class ProfileFragment:Fragment() {
                     val days = document.getLong("days")!!
                     ref.update("days", days+1)
                 }
-
             // 마지막 열었던 날짜를 현재 날짜로 업데이트
             preferences.edit().putLong(lastOpenDate, currentTime).apply()
             true
@@ -228,7 +322,148 @@ class ProfileFragment:Fragment() {
         return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
                 cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)
     }
-    private fun kcalProgress(){
+    private fun progressMax(){
+        val progressBarCal = binding.progressBarCalorie
+        val pBarCarbohydrate = binding.progressBarCarbohydrate
+        val pBarProtein = binding.progressBarProtein
+        val pBarFat = binding.progressBarFat
+        val textCalorie = binding.calText
+        val textCarbohydrate = binding.carboText
+        val textProtein = binding.protText
+        val textFat = binding.fatText
+        //권장 칼로리 계산
+        val ref = db.collection(uid).document("userInformation")
+        ref.get().addOnSuccessListener { document->
+            val h1 = document.getDouble("height")!!.toFloat()
+            val w1 = document.getDouble("weight")!!.toFloat()
+            val sex =document.getString("gender")!!
+            var sexN:Int=22
+            if(sex!="male")sexN =21
+            //남자는22여자는21을 곱한다
+            //키, 몸무게 값이 입력이 되어 있다면 적정 체중, 적정 칼로리 계산
+            if(h1>0.0f&&w1>0.0f){
+                var normalWeight = h1*h1*sexN/10000
+                //177*177*22/10000
+                //69.7048
+                normalWeight = (((normalWeight* 10000).toInt() / 1000).toFloat()/10)
+                //69.7
+                //3대영양소 탄단지 5:3:2
+                val p = roundDigit((normalWeight*30)*0.5/4,0).toInt()
+                val c = roundDigit((normalWeight*30)*0.3/4,0).toInt()
+                val f = roundDigit((normalWeight*30)*0.2/9,0).toInt()
+                progressBarCal.max = (normalWeight*10*30).toInt()//697*30
+                pBarCarbohydrate.max = p
+                pBarProtein.max=c
+                pBarFat.max = f
+                textCalorie.text = getString(R.string.progressText,"칼로리","20%","20",(normalWeight*30).toInt().toString())
+                textCarbohydrate.text =getString(R.string.progressText,"탄수화물","%","d",c.toString())
+                textProtein.text = getString(R.string.progressText,"단백질","%","d",p.toString())
+                textFat.text = getString(R.string.progressText,"지방","%","d",f.toString())
+            }
+        }
+    }
 
+    fun roundDigit(number : Double, digits : Int): Double { //소수점 반올림 함수
+        return Math.round(number * Math.pow(10.0, digits.toDouble())) / Math.pow(10.0, digits.toDouble())
+    }
+    private fun loadFoodRecords(initialLoad: Boolean) {
+        if (isLoading) return
+        isLoading = true
+
+        var query = FirebaseFirestore.getInstance()
+            .collection(uid)
+            .document("foodRecord")
+            .collection("foodRecords")
+            .orderBy("date", Query.Direction.DESCENDING)
+            .limit(15)
+
+        if (!initialLoad && lastVisibleDocumentSnapshot != null) {
+            query = query.startAfter(lastVisibleDocumentSnapshot)
+        }
+
+        query.get().addOnSuccessListener { documents ->
+            if (initialLoad) {
+                foodRecords.clear()
+            }
+            // 더 이상 불러올 데이터가 없을 경우 처리
+            if (documents.isEmpty) {
+                isLoading = false
+                lastVisibleDocumentSnapshot = null
+                return@addOnSuccessListener
+            }
+            val newRecords = documents.documents.mapNotNull { it.toObject(FoodRecordEntry::class.java) }
+            val groupedRecords = newRecords.groupBy { it.date }.mapValues { (_, records) ->
+                records.reduce { acc, record ->
+                    FoodRecordEntry(
+                        kcal = acc.kcal + record.kcal,
+                        carbohydrates = acc.carbohydrates + record.carbohydrates,
+                        protein = acc.protein + record.protein,
+                        fat = acc.fat + record.fat,
+                        date = acc.date
+                    )
+                }
+            }.values.toList()
+            foodRecords.addAll(groupedRecords)
+            recordAdapter.notifyDataSetChanged()
+            // 결과 개수가 15개 미만이면 더 이상 불러올 데이터가 없음을 의미
+            if (documents.size() < 15) {
+                lastVisibleDocumentSnapshot = null
+            } else {
+                lastVisibleDocumentSnapshot = documents.documents.lastOrNull()
+            }
+            isLoading = false
+        }.addOnFailureListener {
+            isLoading = false
+            Log.e("FireBase", "loadFoodRecords: ", it)
+        }
+    }
+    class RecordAdapter(private val records: List<FoodRecordEntry>) : RecyclerView.Adapter<RecordAdapter.RecordViewHolder>() {
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecordViewHolder {
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.item_food_record, parent, false)
+            return RecordViewHolder(view)
+        }
+        override fun onBindViewHolder(holder: RecordViewHolder, position: Int) {
+            val record = records[position]
+            holder.bind(record)
+        }
+        override fun getItemCount(): Int = records.size
+        class RecordViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+            private val dateTextView: TextView = view.findViewById(R.id.dateTextView)
+            private val totalCaloriesTextView: TextView = view.findViewById(R.id.totalCaloriesTextView)
+            private val totalCarbsTextView: TextView = view.findViewById(R.id.totalCarbsTextView)
+            private val totalProteinTextView: TextView = view.findViewById(R.id.totalProteinTextView)
+            private val totalFatTextView: TextView = view.findViewById(R.id.totalFatTextView)
+            fun bind(record: FoodRecordEntry) {
+                dateTextView.text = record.date
+                totalCaloriesTextView.text = "칼로리: ${record.kcal.toInt()}"
+                totalCarbsTextView.text = "탄수화물: ${record.carbohydrates.toInt()}"
+                totalProteinTextView.text = "단백질: ${record.protein.toInt()}"
+                totalFatTextView.text = "지방: ${record.fat.toInt()}"
+            }
+        }
+    }
+    private fun workoutCheck(){
+        val b = binding.workoutCheckButton
+        var lastWorkout:String=""
+        var days:Int=0
+        val ref = db.collection(uid).document("userInformation")
+        ref.get().addOnSuccessListener {document->
+            lastWorkout = document.getString("lastWorkout")!!
+            days = document.getLong("workoutDay")!!.toInt()
+        }
+        b.setOnClickListener {
+            if(lastWorkout!=formattedDate){
+
+                ref.update("lastWorkout",formattedDate)
+                ref.update("workoutDay",days+1)
+            }else{
+                if(toast==null){
+                    toast = Toast.makeText(getContext(),"버튼을 이미 눌렀습니다.",Toast.LENGTH_SHORT)
+                    toast?.show()
+                }
+            }
+            daysUpdate()
+        }
     }
 }

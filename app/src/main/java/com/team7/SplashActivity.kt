@@ -8,21 +8,28 @@ import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 class SplashActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
+    private lateinit var db: FirebaseFirestore
+    private var days:String?="null"
+    private var workoutDays:String?="null"
+    private var dietDays:String?="null"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
         auth = Firebase.auth
-
+        db = Firebase.firestore
         Handler().postDelayed({
 //            val intent = Intent(this, UseActivity::class.java)
 //            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
 //            startActivity(intent)
             finish()
         }, 30000)
+
     }
 
     override fun onStart() {
@@ -38,13 +45,24 @@ class SplashActivity : AppCompatActivity() {
             startActivity(intent)
         }
         else{
-            val intent = Intent(this,UseActivity::class.java)
-            intent.apply {
-                this.putExtra("user_uid",user.uid)
-                this.putExtra("user_displayName",user.displayName)
-                this.putExtra("user_phoneNumber",user.phoneNumber)
-            }
-            startActivity(intent)
+            val ref = db.collection(user.uid).document("userInformation")
+            ref.get()
+                .addOnSuccessListener { document->
+                    days = (document.getLong("days") ?: 0).toString() // Use 0 if "days" is null
+                    workoutDays = (document.getLong("workoutDay") ?: 0).toString() // Use 0 if "days" is null
+                    dietDays = (document.getLong("dietDay") ?: 0).toString() // Use 0 if "days" is null
+                    val intent = Intent(this,UseActivity::class.java)
+                    intent.apply {
+                        this.putExtra("user_uid",user.uid)
+                        this.putExtra("user_displayName",user.displayName)
+                        this.putExtra("user_phoneNumber",user.phoneNumber)
+                        this.putExtra("ds",days)
+                        this.putExtra("wds",workoutDays)
+                        this.putExtra("dds",dietDays)
+                    }
+                    startActivity(intent)
+                }
+
         }
     }
 }

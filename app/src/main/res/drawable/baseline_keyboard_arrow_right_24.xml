@@ -2,14 +2,14 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- 배경 -->
-    <item>
+    <!--<item>
         <shape android:shape="rectangle">
             <solid android:color="@color/background" />
         </shape>
-    </item>
+    </item>-->
 
     <!-- 화살표 -->
-    <item android:left="200dp">
+    <item android:left="0dp">
         <vector android:autoMirrored="true"
             android:height="24dp" android:tint="#000000"
             android:viewportHeight="24" android:viewportWidth="24"

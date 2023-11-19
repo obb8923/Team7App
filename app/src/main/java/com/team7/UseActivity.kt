@@ -8,12 +8,15 @@ import com.team7.databinding.ActivityUseBinding
 
 class UseActivity : AppCompatActivity() {
     private lateinit var profileFragment:ProfileFragment
-    private lateinit var recordFragment:RecordFragment
+    private lateinit var mainRecordFragment:MainRecordFragment
     private lateinit var moreFragment:MoreFragment
     private lateinit var binding: ActivityUseBinding
     private var userUid:String?= "nullUid"
     private var userDisplayName:String?= "nullDisplayName"
     private var userPhoneNumber:String?= "nullPhoneNumber"
+    private var ds:String?="null"
+    private var wds:String?="null"
+    private var dds:String?="null"
     private var toast: Toast? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,6 +25,9 @@ class UseActivity : AppCompatActivity() {
         userUid = intent.getStringExtra("user_uid")
         userDisplayName=intent.getStringExtra("user_displayName")
         userPhoneNumber=intent.getStringExtra("user_phoneNumber")
+        ds = intent.getStringExtra("ds")
+        wds = intent.getStringExtra("wds")
+        dds = intent.getStringExtra("dds")
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
     }
 
@@ -36,8 +42,8 @@ class UseActivity : AppCompatActivity() {
     }
     //Fragment 생성과 이동
     private fun fragmentManage(){
-        profileFragment =ProfileFragment.newInstance(userDisplayName,userUid)
-        recordFragment =RecordFragment.newInstance(userUid)
+        profileFragment =ProfileFragment.newInstance(userDisplayName,userUid,ds,wds,dds)
+        mainRecordFragment =MainRecordFragment.newInstance(userUid)
         moreFragment =MoreFragment.newInstance()
         supportFragmentManager.beginTransaction().replace(R.id.fragmentFrame,profileFragment).commit()
 
@@ -49,8 +55,8 @@ class UseActivity : AppCompatActivity() {
                         supportFragmentManager.beginTransaction().replace(R.id.fragmentFrame, profileFragment).commit()
                     }}
                 R.id.bottomNavRecord->{
-                    if(currentFragment !is RecordFragment){
-                        supportFragmentManager.beginTransaction().replace(R.id.fragmentFrame,recordFragment).commit()
+                    if(currentFragment !is IconSelectionFragment){
+                        supportFragmentManager.beginTransaction().replace(R.id.fragmentFrame,mainRecordFragment).commit()
                     }}
                 R.id.bottomNavMore->{
                     if(currentFragment !is MoreFragment){
