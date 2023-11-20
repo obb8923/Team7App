@@ -100,8 +100,7 @@ class ProfileFragment:Fragment() {
         super.onStart()
         //makeSet()
         layoutValueUpdate()
-        progressMax()
-        //loadFoodRecords(initialLoad = true)
+        myNutrition()
 
     }
     override fun onResume() {
@@ -148,7 +147,6 @@ class ProfileFragment:Fragment() {
         allDay.text = getString(R.string.nullDays, days)
         workoutDay.text = getString(R.string.nullDays, workoutDays)
         dietDay.text = getString(R.string.nullDays, dietDays)
-
     }
 
     private fun correctionButton(){
@@ -183,7 +181,6 @@ class ProfileFragment:Fragment() {
                 }
                 if(w0>0&&w1>0.0f&&w2>0.0f&&w3>0.0f) {
                     //유저 정보 변경 - 몸무게
-
                     val ref = db.collection(uid).document("userInformation")
                     ref .get().addOnSuccessListener { document->
                         ref.update("lastWeight", document.getDouble("weight")!!.toFloat())
@@ -213,7 +210,6 @@ class ProfileFragment:Fragment() {
             val currentWeight= document.getDouble("weight")!!.toFloat()
             val goalWeight = document.getDouble("goalWeight")!!.toFloat()
             val lastWeight = document.getDouble("lastWeight")!!.toFloat()
-            val height = document.getDouble("height")!!.toFloat()
             goalWeightTextView.text = getString(R.string.goalWeight,goalWeight)
             //현재 몸무게가 저번 몸무게 보다 크거나 같다면...
             if(currentWeight>=lastWeight){
@@ -222,9 +218,6 @@ class ProfileFragment:Fragment() {
                 currentWeightTextView.text = getString(R.string.currentWeight,currentWeight,"-",lastWeight-currentWeight)
             }
         }
-
-
-
     }
     private fun makeSet(){
         val ref = db.collection(uid)
@@ -322,8 +315,34 @@ class ProfileFragment:Fragment() {
         return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
                 cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)
     }
-    private fun progressMax(){
-        val progressBarCal = binding.progressBarCalorie
+    private fun myNutrition(){
+        var c = 0.0
+        var p = 0.0
+        var f = 0.0
+        var k = 0.0
+        var query = FirebaseFirestore.getInstance()
+            .collection(uid)
+            .document("foodRecord")
+            .collection("foodRecords")
+            .whereEqualTo("date",formattedDate)
+
+        query.get().addOnSuccessListener { querySnapshot ->
+            for (document in querySnapshot) {
+                f+= document.getDouble("fat")!!
+                p+= document.getDouble("protein")!!
+                c+= document.getDouble("carbohydrates")!!
+                k+= document.getDouble("kcal")!!
+            }
+            val cp  = roundDigit(c,0).toInt()
+            val pp = roundDigit(p,0).toInt()
+            val fp = roundDigit(f,0).toInt()
+            val kp = roundDigit(k,0).toInt()
+            progressMax(kp,cp,pp,fp)
+        }
+    }
+
+    private fun progressMax(kp:Int,cp:Int,pp:Int,fp:Int){
+        val pBarCal = binding.progressBarCalorie
         val pBarCarbohydrate = binding.progressBarCarbohydrate
         val pBarProtein = binding.progressBarProtein
         val pBarFat = binding.progressBarFat
@@ -337,7 +356,7 @@ class ProfileFragment:Fragment() {
             val h1 = document.getDouble("height")!!.toFloat()
             val w1 = document.getDouble("weight")!!.toFloat()
             val sex =document.getString("gender")!!
-            var sexN:Int=22
+            var sexN=22
             if(sex!="male")sexN =21
             //남자는22여자는21을 곱한다
             //키, 몸무게 값이 입력이 되어 있다면 적정 체중, 적정 칼로리 계산
@@ -351,102 +370,43 @@ class ProfileFragment:Fragment() {
                 val p = roundDigit((normalWeight*30)*0.5/4,0).toInt()
                 val c = roundDigit((normalWeight*30)*0.3/4,0).toInt()
                 val f = roundDigit((normalWeight*30)*0.2/9,0).toInt()
-                progressBarCal.max = (normalWeight*10*30).toInt()//697*30
-                pBarCarbohydrate.max = p
-                pBarProtein.max=c
+                val k =(normalWeight*30).toInt()//697*30
+                //권장 영양소 max 값 Update
+                pBarCal.max = k
+                pBarCarbohydrate.max = c
+                pBarProtein.max=p
                 pBarFat.max = f
-                textCalorie.text = getString(R.string.progressText,"칼로리","20%","20",(normalWeight*30).toInt().toString())
-                textCarbohydrate.text =getString(R.string.progressText,"탄수화물","%","d",c.toString())
-                textProtein.text = getString(R.string.progressText,"단백질","%","d",p.toString())
-                textFat.text = getString(R.string.progressText,"지방","%","d",f.toString())
+                //진행도Update
+                pBarCarbohydrate.progress = cp
+                pBarProtein.progress = pp
+                pBarFat.progress = fp
+                pBarCal.progress = kp
+                //오늘 먹은 영양소
+                val kps = kp.toString()
+                val pps = pp.toString()
+                val cps = cp.toString()
+                val fps = fp.toString()
+                //진행도 percent
+                val kPercent = roundDigit((kp.toDouble()/k*100),1).toString()
+                val pPercent = roundDigit((pp.toDouble()/p*100),1).toString()
+                val cPercent = roundDigit((cp.toDouble()/c*100),1).toString()
+                val fPercent = roundDigit((fp.toDouble()/f*100),1).toString()
+
+                //Text 나타내기
+                textCalorie.text = getString(R.string.progressText,"칼로리",kPercent+"%",kps,(normalWeight*30).toInt().toString())
+                textCarbohydrate.text =getString(R.string.progressText,"탄수화물",cPercent+"%",cps,c.toString())
+                textProtein.text = getString(R.string.progressText,"단백질",pPercent+"%",pps,p.toString())
+                textFat.text = getString(R.string.progressText,"지방",fPercent+"%",fps,f.toString())
             }
         }
     }
-
     fun roundDigit(number : Double, digits : Int): Double { //소수점 반올림 함수
         return Math.round(number * Math.pow(10.0, digits.toDouble())) / Math.pow(10.0, digits.toDouble())
     }
-    private fun loadFoodRecords(initialLoad: Boolean) {
-        if (isLoading) return
-        isLoading = true
-
-        var query = FirebaseFirestore.getInstance()
-            .collection(uid)
-            .document("foodRecord")
-            .collection("foodRecords")
-            .orderBy("date", Query.Direction.DESCENDING)
-            .limit(15)
-
-        if (!initialLoad && lastVisibleDocumentSnapshot != null) {
-            query = query.startAfter(lastVisibleDocumentSnapshot)
-        }
-
-        query.get().addOnSuccessListener { documents ->
-            if (initialLoad) {
-                foodRecords.clear()
-            }
-            // 더 이상 불러올 데이터가 없을 경우 처리
-            if (documents.isEmpty) {
-                isLoading = false
-                lastVisibleDocumentSnapshot = null
-                return@addOnSuccessListener
-            }
-            val newRecords = documents.documents.mapNotNull { it.toObject(FoodRecordEntry::class.java) }
-            val groupedRecords = newRecords.groupBy { it.date }.mapValues { (_, records) ->
-                records.reduce { acc, record ->
-                    FoodRecordEntry(
-                        kcal = acc.kcal + record.kcal,
-                        carbohydrates = acc.carbohydrates + record.carbohydrates,
-                        protein = acc.protein + record.protein,
-                        fat = acc.fat + record.fat,
-                        date = acc.date
-                    )
-                }
-            }.values.toList()
-            foodRecords.addAll(groupedRecords)
-            recordAdapter.notifyDataSetChanged()
-            // 결과 개수가 15개 미만이면 더 이상 불러올 데이터가 없음을 의미
-            if (documents.size() < 15) {
-                lastVisibleDocumentSnapshot = null
-            } else {
-                lastVisibleDocumentSnapshot = documents.documents.lastOrNull()
-            }
-            isLoading = false
-        }.addOnFailureListener {
-            isLoading = false
-            Log.e("FireBase", "loadFoodRecords: ", it)
-        }
-    }
-    class RecordAdapter(private val records: List<FoodRecordEntry>) : RecyclerView.Adapter<RecordAdapter.RecordViewHolder>() {
-
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecordViewHolder {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.item_food_record, parent, false)
-            return RecordViewHolder(view)
-        }
-        override fun onBindViewHolder(holder: RecordViewHolder, position: Int) {
-            val record = records[position]
-            holder.bind(record)
-        }
-        override fun getItemCount(): Int = records.size
-        class RecordViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-            private val dateTextView: TextView = view.findViewById(R.id.dateTextView)
-            private val totalCaloriesTextView: TextView = view.findViewById(R.id.totalCaloriesTextView)
-            private val totalCarbsTextView: TextView = view.findViewById(R.id.totalCarbsTextView)
-            private val totalProteinTextView: TextView = view.findViewById(R.id.totalProteinTextView)
-            private val totalFatTextView: TextView = view.findViewById(R.id.totalFatTextView)
-            fun bind(record: FoodRecordEntry) {
-                dateTextView.text = record.date
-                totalCaloriesTextView.text = "칼로리: ${record.kcal.toInt()}"
-                totalCarbsTextView.text = "탄수화물: ${record.carbohydrates.toInt()}"
-                totalProteinTextView.text = "단백질: ${record.protein.toInt()}"
-                totalFatTextView.text = "지방: ${record.fat.toInt()}"
-            }
-        }
-    }
     private fun workoutCheck(){
         val b = binding.workoutCheckButton
-        var lastWorkout:String=""
-        var days:Int=0
+        var lastWorkout=""
+        var days=0
         val ref = db.collection(uid).document("userInformation")
         ref.get().addOnSuccessListener {document->
             lastWorkout = document.getString("lastWorkout")!!

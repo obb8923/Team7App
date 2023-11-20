@@ -14,7 +14,7 @@
     <string name="correction">수정하기</string>
     <string name="userInformWeight">몸무게: %1$.1fkg</string>
     <string name="userInformHeight">키: %1$.1fcm </string>
-    <string name="progressText">%1$s - %2$s %3$s/%4$s</string>
+    <string name="progressText">%1$s | %2$s %3$s/%4$s</string>
     <string name="logoutConfirm">"로그아웃 하시겠습니까?"</string>
     <string name="backPressedTwice">"한 번 더 누르면 종료합니다."</string>
     <string name="allDayText">전체</string>
@@ -25,7 +25,14 @@
     <string name="cancel">"취소"</string>
     <string name="inquiry">문의하기</string>
     <string name="notice231107">[공지사항] 어플 출시</string>
-    <string name="notice231107detail">어플이 출시되었습니다!\n\n\n\n\n\n\n\\n test\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n</string>
+    <string name="notice231107detail">\n&lt; 라이프체커 &gt;\n어플이 출시되었습니다!\n\n
+        우리 어플은, \n매일의 건강 기록을 도와주는 어플입니다.\n
+        기존의 어플들에는 내가 먹은 음식을 일일히 찾아서 기록해야하는 번거로움이 있습니다.\n\n
+        하지만 건강관리를 꾸준히 하시는 분들에게는 건강식을 먹은 것이 오늘 뿐만이 아닐 것입니다.\n\n
+        어제 먹은 음식을 오늘 또 먹고, 오늘 먹은 음식을 내일 또 먹을 분들을 위해, \n\n
+        내가 먹는 음식의 칼로리 정도야 대충은 다 알고있다는 분들을 위해,\n\n
+        최대한 간단하게 매일을 기록할 수 있도록 어플을 만들었습니다.
+        \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
