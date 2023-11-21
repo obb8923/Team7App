@@ -90,6 +90,10 @@ class RecordFragment : Fragment() {
             }
         }
         val saveButton: Button = view.findViewById(R.id.saveButton)
+        var cancleButton: Button = view.findViewById(R.id.cancelButton)
+        cancleButton.setOnClickListener {
+            navigateBackToMainRecordFragment()
+        }
         saveButton.setOnClickListener {
             val totalValues = hashMapOf(
                 "kcal" to 0.0,
@@ -123,7 +127,6 @@ class RecordFragment : Fragment() {
                 date = formattedDate
             )
 
-
             // Firestore에 데이터 저장
             foodRecordDocRef.set(foodEntry)
                 .addOnFailureListener { e ->
@@ -137,18 +140,15 @@ class RecordFragment : Fragment() {
 
     }
     private fun navigateBackToMainRecordFragment() {
-        // 모든 프래그먼트 스택을 비우고 메인 레코드 프래그먼트로 돌아가기
+        // 모든 프래그먼트 스택을 비우기
         requireActivity().supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-        // 현재 활성화된 프래그먼트 찾기
-        val currentFragment = requireActivity().supportFragmentManager.findFragmentById(R.id.container)
 
-        // 현재 프래그먼트 새로고침
-        currentFragment?.let {
-            requireActivity().supportFragmentManager.beginTransaction()
-                .detach(it)
-                .attach(it)
-                .commit()
-        }
+        val newMainRecordFragment = MainRecordFragment.newInstance(arguments?.getString("userUid"))
+
+        // FragmentTransaction을 사용하여 새로운 MainRecordFragment를 container에 추가
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(R.id.container, newMainRecordFragment)
+            .commit()
     }
 
     private fun createCustomSeekBars(container: LinearLayout, items: ArrayList<FoodItem>) {

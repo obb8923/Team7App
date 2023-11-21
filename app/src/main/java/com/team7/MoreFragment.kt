@@ -20,10 +20,6 @@ class MoreFragment:Fragment() {
         }
     }
     private lateinit var binding: FragmentMoreBinding
-
-
-
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -38,6 +34,7 @@ class MoreFragment:Fragment() {
         logoutButton()
         noticeButton()
     }
+
     private fun alertLogout(){
         AlertDialog.Builder(requireContext())
             .setTitle(R.string.logoutConfirm)

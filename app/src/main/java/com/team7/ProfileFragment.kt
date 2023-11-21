@@ -2,7 +2,6 @@ package com.team7
 
 import android.app.AlertDialog
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,27 +9,24 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.RadioGroup
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.play.core.integrity.p
-import com.google.android.play.integrity.internal.c
-import com.google.android.play.integrity.internal.f
-import com.google.firebase.firestore.DocumentSnapshot
+import com.google.android.play.integrity.internal.w
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.team7.databinding.FragmentProfileBinding
+import layout.HelpNutritionDialog
+import layout.HelpWeightDialog
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
 
 class ProfileFragment:Fragment() {
     companion object{
-        fun newInstance(userDisplayName: String?,userUid:String?,ds:String?,wds:String?,dds:String?): ProfileFragment {
+        fun newInstance
+                    (userDisplayName: String?,userUid:String?,ds:String?,wds:String?,dds:String?,gw:String?,cw:String?,lw:String?)
+        : ProfileFragment {
             val fragment = ProfileFragment()
             val args = Bundle()
             args.putString("userDisplayName", userDisplayName)
@@ -38,6 +34,9 @@ class ProfileFragment:Fragment() {
             args.putString("ds",ds)
             args.putString("wds",wds)
             args.putString("dds",dds)
+            args.putString("gw",gw)
+            args.putString("cw",cw)
+            args.putString("lw",lw)
             fragment.arguments = args
             return fragment
         }
@@ -51,7 +50,9 @@ class ProfileFragment:Fragment() {
     private var days:String? ="null"
     private var workoutDays:String? ="null"
     private var dietDays:String? ="null"
-
+    private var goalW:String="null"
+    private var currW:String?="null"
+    private var lastW:String?="null"
 
     private val currentDate = LocalDate.now()//시간
     private val formatter = DateTimeFormatter.ofPattern("yyyyMMdd") //날짜 형식 포맷 지정
@@ -66,17 +67,11 @@ class ProfileFragment:Fragment() {
         "goalWeight" to 0.0f,
         "lastWeight" to 0.0f,
         "lastWorkout" to "",
-        "days" to 1,
-        "workoutDay" to 0,
-        "dietDay" to 0
+        "lastDiet" to "",
+        "days" to 3,
+        "workoutDay" to 2,
+        "dietDay" to 1
     )
-
-    private val foodRecords = mutableListOf<FoodRecordEntry>()
-    private lateinit var recordAdapter: MainRecordFragment.RecordAdapter
-    private var lastVisibleDocumentSnapshot: DocumentSnapshot? = null
-    private var isLoading = false
-    private lateinit var fabIconSelection: FloatingActionButton
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         db = Firebase.firestore
@@ -85,7 +80,9 @@ class ProfileFragment:Fragment() {
         days = arguments?.getString("ds")!!
         workoutDays = arguments?.getString("wds")!!
         dietDays = arguments?.getString("dds")!!
-
+        goalW = arguments?.getString("gw")!!
+        currW = arguments?.getString("cw")!!
+        lastW = arguments?.getString("lw")!!
     }
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -99,17 +96,20 @@ class ProfileFragment:Fragment() {
     override fun onStart() {
         super.onStart()
         //makeSet()
-        layoutValueUpdate()
-        myNutrition()
+
 
     }
     override fun onResume() {
         super.onResume()
         val context = requireContext()
+        layoutValueUpdate()
+        myNutrition()
         profileName()
         isFirstTimeOpen(context)
         correctionButton()
         workoutCheck()
+        dietCheck()
+        helpButton()
     }
     override fun onPause() {
         super.onPause()
@@ -164,7 +164,7 @@ class ProfileFragment:Fragment() {
                 // 아래는 확인 버튼 클릭 시 수행할 동작
                 // 정보 수정 및 표시
                 val radioGroup = dialogView.findViewById<RadioGroup>(R.id.select_sex)
-                var selectedSex:String ="male"
+                var selectedSex ="male"
                 val editText0 = dialogView.findViewById<EditText>(R.id.age)
                 val editText1 = dialogView.findViewById<EditText>(R.id.height)
                 val editText2 = dialogView.findViewById<EditText>(R.id.goal_weight)
@@ -183,18 +183,20 @@ class ProfileFragment:Fragment() {
                     //유저 정보 변경 - 몸무게
                     val ref = db.collection(uid).document("userInformation")
                     ref .get().addOnSuccessListener { document->
-                        ref.update("lastWeight", document.getDouble("weight")!!.toFloat())
-                    }
-                    ref.update(
-                        mapOf(
-                            "gender" to selectedSex,
-                            "age" to w0,
-                            "height" to w1,
-                            "goalWeight" to w2,
-                            "weight" to w3
+                        val lastW =  document.getDouble("weight")!!.toFloat()
+                        ref.update(
+                            mapOf(
+                                "gender" to selectedSex,
+                                "age" to w0,
+                                "height" to w1,
+                                "goalWeight" to w2,
+                                "weight" to w3,
+                                "lastWeight" to lastW
+                            )
                         )
-                    )
-                    weightUpdate()
+                        weightUpdate(w2,w3,lastW)
+                        myNutrition()
+                    }
                 }
             }
             // 다이얼로그 생성 및 표시
@@ -202,21 +204,58 @@ class ProfileFragment:Fragment() {
             dialog.show()
         }
     }
-    private fun weightUpdate(){
+    //정보 수정 이후 변경된 값 화면에 나타내기
+    private fun weightUpdate(gw:Float,cw:Float,lw:Float) {
         val goalWeightTextView = binding.goalWeight
         val currentWeightTextView = binding.currentWeight
-        val ref =db.collection(uid).document("userInformation")
-        ref.get().addOnSuccessListener { document->
-            val currentWeight= document.getDouble("weight")!!.toFloat()
-            val goalWeight = document.getDouble("goalWeight")!!.toFloat()
-            val lastWeight = document.getDouble("lastWeight")!!.toFloat()
-            goalWeightTextView.text = getString(R.string.goalWeight,goalWeight)
-            //현재 몸무게가 저번 몸무게 보다 크거나 같다면...
-            if(currentWeight>=lastWeight){
-                currentWeightTextView.text = getString(R.string.currentWeight,currentWeight,"+",currentWeight-lastWeight)
-            }else{// 작다면 ...
-                currentWeightTextView.text = getString(R.string.currentWeight,currentWeight,"-",lastWeight-currentWeight)
+        goalWeightTextView.text = getString(R.string.goalWeight, gw.toString())
+        //현재 몸무게가 저번 몸무게 보다 크거나 같다면...
+        if (cw >= lw) {
+            currentWeightTextView.text = getString(
+                R.string.currentWeight,
+                cw.toString(),
+                "+",
+                (cw - lw).toString()
+            )
+        } else {// 작다면 ...
+            currentWeightTextView.text = getString(
+                R.string.currentWeight,
+                cw.toString(),
+                "-",
+                (cw - lw).toString()
+            )
+        }
+    }
+    //Fragment 만들어질때 화면 업데이트
+        private fun weightUpdate(){
+        val goalWeightTextView = binding.goalWeight
+        val currentWeightTextView = binding.currentWeight
+        if(goalW=="null"){
+            val ref =db.collection(uid).document("userInformation")
+            ref.get().addOnSuccessListener { document ->
+                goalW = document.getDouble("goalWeight")!!.toFloat().toString()
+                currW = document.getDouble("weight")!!.toFloat().toString()
+                lastW = document.getDouble("lastWeight")!!.toFloat().toString()
             }
+        }
+        val cw = currW!!.toFloat()
+        val lw = lastW!!.toFloat()
+        goalWeightTextView.text = getString(R.string.goalWeight, goalW)
+        //현재 몸무게가 저번 몸무게 보다 크거나 같다면...
+        if (cw >= lw) {
+            currentWeightTextView.text = getString(
+                R.string.currentWeight,
+                currW,
+                "+",
+                (cw - lw).toString()
+            )
+        } else {// 작다면 ...
+            currentWeightTextView.text = getString(
+                R.string.currentWeight,
+                currW,
+                "-",
+                (cw - lw).toString()
+            )
         }
     }
     private fun makeSet(){
@@ -274,7 +313,7 @@ class ProfileFragment:Fragment() {
         val prefName = "MyAppPreferences"
         val lastOpenDate = "lastOpenDate"
         val preferences = context.getSharedPreferences(prefName, Context.MODE_PRIVATE)
-        var lastOpenTime = preferences.getLong(lastOpenDate, 0)
+        val lastOpenTime = preferences.getLong(lastOpenDate, 0)
         // 현재 날짜와 마지막으로 열었던 날짜를 비교하여 첫 실행 여부를 확인
         val calendar = Calendar.getInstance()
         val currentTime = calendar.timeInMillis
@@ -320,7 +359,7 @@ class ProfileFragment:Fragment() {
         var p = 0.0
         var f = 0.0
         var k = 0.0
-        var query = FirebaseFirestore.getInstance()
+        val query = FirebaseFirestore.getInstance()
             .collection(uid)
             .document("foodRecord")
             .collection("foodRecords")
@@ -413,17 +452,69 @@ class ProfileFragment:Fragment() {
             days = document.getLong("workoutDay")!!.toInt()
         }
         b.setOnClickListener {
+            Log.d("운동버튼","운동버튼")
+
             if(lastWorkout!=formattedDate){
 
                 ref.update("lastWorkout",formattedDate)
                 ref.update("workoutDay",days+1)
             }else{
                 if(toast==null){
-                    toast = Toast.makeText(getContext(),"버튼을 이미 눌렀습니다.",Toast.LENGTH_SHORT)
+                    toast = Toast.makeText(getContext(),"오늘은 운동 체크 버튼을 이미 눌렀습니다.",Toast.LENGTH_SHORT)
+                    toast?.show()
+                }else{
+                    toast =null
+                    toast = Toast.makeText(getContext(),"오늘은 운동 체크 버튼을 이미 눌렀습니다.",Toast.LENGTH_SHORT)
                     toast?.show()
                 }
             }
             daysUpdate()
+        }
+    }
+    private fun dietCheck(){
+        val b = binding.dietCheckButton
+        var lastDiet=""
+        var days=0
+        val ref = db.collection(uid).document("userInformation")
+        ref.get().addOnSuccessListener {document->
+            lastDiet = document.getString("lastDiet")!!
+            days = document.getLong("dietDay")!!.toInt()
+        }
+        b.setOnClickListener {
+            Log.d("식단버튼","식단버튼")
+            if(lastDiet!=formattedDate){
+                ref.update("lastDiet",formattedDate)
+                ref.update("dietDay",days+1)
+            }else{
+                if(toast==null){
+                    toast = Toast.makeText(getContext(),"오늘은 식단 체크 버튼을 이미 눌렀습니다.",Toast.LENGTH_SHORT)
+                    toast?.show()
+                }else{
+                    toast =null
+                    toast = Toast.makeText(getContext(),"오늘은 식단 체크 버튼을 이미 눌렀습니다.",Toast.LENGTH_SHORT)
+                    toast?.show()
+                }
+            }
+            daysUpdate()
+        }
+    }
+    private fun helpButton(){
+        val b1 = binding.helpButton1
+        val b2 = binding.helpButton2
+        b1.setOnClickListener{
+            val ref = db.collection(uid).document("userInformation")
+            ref.get().addOnSuccessListener { document->
+                val h = document.getDouble("height")!!.toFloat()
+                val w = if(document.getString("gender")=="male"){22}else{21}
+                HelpWeightDialog.show(requireContext(),h, w)
+            }
+        }
+        b2.setOnClickListener {
+            val ref = db.collection(uid).document("userInformation")
+            ref.get().addOnSuccessListener { document->
+                HelpNutritionDialog.show(requireContext())
+            }
+
         }
     }
 }

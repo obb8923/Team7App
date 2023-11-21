@@ -20,8 +20,8 @@
     <string name="allDayText">전체</string>
     <string name="workoutDayText">운동</string>
     <string name="dietDayText">식단</string>
-    <string name="goalWeight">목표: %1$.1fkg</string>
-    <string name="currentWeight">오늘: %1$.1fkg (%2$s%3$.1f)</string>
+    <string name="goalWeight">목표: %1$skg</string>
+    <string name="currentWeight">오늘: %1$skg (%2$s%3$s)</string>
     <string name="cancel">"취소"</string>
     <string name="inquiry">문의하기</string>
     <string name="notice231107">[공지사항] 어플 출시</string>
@@ -33,8 +33,10 @@
         내가 먹는 음식의 칼로리 정도야 대충은 다 알고있다는 분들을 위해,\n\n
         최대한 간단하게 매일을 기록할 수 있도록 어플을 만들었습니다.
         \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
-
+    <string name="whatIsNormalWeight">일상생활에서 건강을 유지하기 위한 적절한 체중을 표준 체중이라 하며, 이는 성별과 신장에 따라 달라집니다.\n표준 체중을 유지하는 것만으로도 여러 질병에 걸릴 위험성과 질병에 의한 사망률을 낮출 수 있다고 알려져 있습니다.\n
+        </string>
+    <string name ="myNormalWeight">따라서 나의 표준체중은 %1$s 입니다.\n\n표준체중은 어디까지나 참고사항이며 본인의 상황을 고려하여 판단하시길 바랍니다.</string>
+    <string name="whatIsCalorie">하루에 섭취 할 음식의 열량은 각자의 표준 체중과 활동 정도에 따라 다릅니다.\n활동성에 따라 표준 체중에 25~35(칼로리/일)을 곱한 값이 권장 칼로리가 됩니다.
+        \n\n개인에 따라 필요한 칼로리 양이 다를 수 있으니 상황과 목적을 고려하여 판단하시길 바랍니다.
+    </string>
 </resources>

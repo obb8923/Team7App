@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="표준 체중이란?"
+        android:textSize="@dimen/top_menu_name_size"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:layout_margin="@dimen/top_menu_bottom_margin"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/whatIsNormalWeight"
+        android:textSize="15sp"
+        android:layout_margin="@dimen/top_menu_bottom_margin"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="표준체중 계산방법 "
+        android:textSize="@dimen/top_menu_name_size"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:layout_margin="@dimen/top_menu_bottom_margin"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="표준체중을 계산하는 방법은 다음과 같습니다.\n\n남성: 표준체중(kg)=키(m)의 제곱 x 22\n여성: 표준체중(kg)=키(m)의 제곱 x 21"
+        android:textSize="15sp"
+        android:layout_margin="@dimen/top_menu_bottom_margin"
+        />
+    <TextView
+        android:id="@+id/normalWeight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/myNormalWeight"
+        android:textSize="15sp"
+        android:layout_margin="@dimen/top_menu_bottom_margin"
+        />
+
+</LinearLayout>

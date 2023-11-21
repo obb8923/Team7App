@@ -128,16 +128,35 @@
                 android:layout_weight="100"
                 android:layout_margin="@dimen/top_menu_bottom_margin"
                 android:background="?android:attr/listDivider" />
-
-            <TextView
-                android:id="@+id/weight"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:orientation="horizontal"
                 android:layout_gravity="center"
-                android:text="몸무게"
-                android:textSize="14sp"
-                />
+                android:layout_marginBottom="10dp"
+
+                >
+                <TextView
+                    android:id="@+id/weight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    android:text="몸무게"
+                    android:textSize="14sp"
+                    />
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/helpButton1"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center_vertical"
+
+                    android:background="@drawable/baseline_help_24"
+                    android:layout_marginLeft="5dp"
+
+                    />
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/goalWeight"
                 android:layout_width="wrap_content"
@@ -160,15 +179,34 @@
                 android:layout_weight="100"
                 android:layout_margin="@dimen/top_menu_bottom_margin"
                 android:background="?android:attr/listDivider" />
-            <TextView
-                android:id="@+id/q"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 android:layout_gravity="center"
-
-                android:text="권장 칼로리와 영양소"
                 android:layout_marginBottom="10dp"
-                />
+
+                >
+                <TextView
+                    android:id="@+id/q"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+
+                    android:text="권장 칼로리와 영양소"
+                    />
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/helpButton2"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center_vertical"
+
+                    android:background="@drawable/baseline_help_24"
+                    android:layout_marginLeft="5dp"
+
+                    />
+            </LinearLayout>
+
 
             <ProgressBar
                 android:id="@+id/progressBarCalorie"
@@ -179,7 +217,7 @@
                 android:layout_marginBottom="1dp"
 
                 android:max="100"
-                android:progress="20"
+                android:progress="0"
                 android:visibility="visible"
                 />
             <TextView
@@ -201,7 +239,7 @@
                 android:layout_marginBottom="1dp"
 
                 android:max="100"
-                android:progress="30"
+                android:progress="0"
                 android:visibility="visible"
                 />
             <TextView
@@ -222,7 +260,7 @@
                 android:scaleY="@integer/five"
                 android:layout_marginBottom="1dp"
                 android:max="100"
-                android:progress="70"
+                android:progress="0"
                 android:visibility="visible"
                 />
             <TextView
@@ -244,7 +282,7 @@
                 android:layout_marginBottom="1dp"
 
                 android:max="100"
-                android:progress="120"
+                android:progress="0"
                 android:visibility="visible"
                 />
             <TextView
@@ -263,19 +301,42 @@
                 android:layout_weight="100"
                 android:layout_margin="@dimen/top_menu_bottom_margin"
                 android:background="?android:attr/listDivider" />
-            <TextView
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:columnCount="2"
+                >
+                <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                    android:layout_gravity="center"
+                    android:layout_columnWeight="1"
                 android:text="오늘의 운동 체크"
+
                 />
-            <android.widget.Button
-                android:id="@+id/workoutCheckButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="운동 완료!"
-                />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_gravity="center"
+
+                    android:text="오늘의 식단 체크"
+                    />
+                <android.widget.Button
+                    android:id="@+id/workoutCheckButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="운동 완료!"
+                    />
+                <android.widget.Button
+                    android:id="@+id/dietCheckButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="식단 완료!"
+                    /></GridLayout>
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

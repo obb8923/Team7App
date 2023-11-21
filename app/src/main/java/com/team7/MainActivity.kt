@@ -36,26 +36,17 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         //구글 로그인 옵션 구성
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(webClientId)//웹클라이언트 ID 요청
             .requestEmail()//이메일 정보 요청
             .build()
-
         //googleSignInClient 초기화
         googleSignInClient = GoogleSignIn.getClient(this, gso)
-
         //Firebase Auth 초기화
         auth = Firebase.auth
-        //로그인 버튼
-        googleSignInButton=binding.LoginButton
-        googleSignInButton.setOnClickListener{
-            signIn()
-        }
+        buttonClick()
     }
-
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -75,7 +66,13 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
+    private fun buttonClick(){
+        val b = binding.LoginButtonDesign
+        b.setOnClickListener{
+            //로그인 버튼
+            signIn()
+        }
+    }
     private fun firebaseAuthWithGoogle(idToken: String,account:GoogleSignInAccount) {
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         auth.signInWithCredential(credential)

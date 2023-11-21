@@ -4,7 +4,6 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
-import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
@@ -18,6 +17,9 @@ class SplashActivity : AppCompatActivity() {
     private var days:String?="null"
     private var workoutDays:String?="null"
     private var dietDays:String?="null"
+    private var goalW:String="null"
+    private var currW:String?="null"
+    private var lastW:String?="null"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
@@ -51,6 +53,9 @@ class SplashActivity : AppCompatActivity() {
                     days = (document.getLong("days") ?: 0).toString() // Use 0 if "days" is null
                     workoutDays = (document.getLong("workoutDay") ?: 0).toString() // Use 0 if "days" is null
                     dietDays = (document.getLong("dietDay") ?: 0).toString() // Use 0 if "days" is null
+                    goalW = (document.getLong("goalWeight") ?: 0).toString()
+                    currW = (document.getLong("weight") ?: 0).toString()
+                    lastW = (document.getLong("lastWeight") ?: 0).toString()
                     val intent = Intent(this,UseActivity::class.java)
                     intent.apply {
                         this.putExtra("user_uid",user.uid)
@@ -59,10 +64,12 @@ class SplashActivity : AppCompatActivity() {
                         this.putExtra("ds",days)
                         this.putExtra("wds",workoutDays)
                         this.putExtra("dds",dietDays)
+                        this.putExtra("gw",goalW)
+                        this.putExtra("cw",currW)
+                        this.putExtra("lw",lastW)
                     }
                     startActivity(intent)
                 }
-
         }
     }
 }

@@ -36,28 +36,6 @@
             android:padding="10dp"
             android:textSize="20sp"
             />
-        <!--<android.widget.Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/tutorial"
-            android:textAlignment="textStart"
-            android:background="@drawable/more_button_design"
-            android:layout_margin="10dp"
-            android:padding="10dp"
-            android:textSize="20sp"
-            />-->
-        <android.widget.Button
-            android:id="@+id/moreTimerButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/timer"
-            android:textAlignment="textStart"
-            android:background="@drawable/more_button_design"
-            android:layout_margin="10dp"
-            android:padding="10dp"
-            android:textSize="20sp"
-            />
-
         <android.widget.Button
             android:id="@+id/moreLogoutButton"
             android:layout_width="match_parent"
