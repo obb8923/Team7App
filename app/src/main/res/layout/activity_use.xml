@@ -31,10 +31,10 @@
         android:background="@color/bottom_nav_background"
         app:itemBackground="@null"
         app:itemIconSize="20dp"
-        app:itemTextColor="@color/bottom_nav_icon"
+        app:itemIconTint="@drawable/menu_selector_color"
+        app:itemTextColor="@drawable/menu_selector_color"
         app:labelVisibilityMode="labeled"
         app:itemRippleColor="@null"
-        app:itemIconTint="@color/bottom_nav_icon"
         app:itemActiveIndicatorStyle="@null"
         />
 </RelativeLayout>
