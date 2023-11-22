@@ -468,7 +468,7 @@ class ProfileFragment:Fragment() {
                     toast?.show()
                 }
             }
-            daysUpdate()
+            workoutDaysUpdate(days+1)
         }
     }
     private fun dietCheck(){
@@ -495,8 +495,16 @@ class ProfileFragment:Fragment() {
                     toast?.show()
                 }
             }
-            daysUpdate()
+            dietDaysUpdate(days+1)
         }
+    }
+    private fun dietDaysUpdate(days:Int){
+        val dietDay = binding.dietDay
+        dietDay.text = getString(R.string.nullDays, days.toString())
+    }
+    private fun workoutDaysUpdate(days:Int){
+        val workoutDay = binding.workoutDay
+        workoutDay.text = getString(R.string.nullDays, days.toString())
     }
     private fun helpButton(){
         val b1 = binding.helpButton1
@@ -514,7 +522,6 @@ class ProfileFragment:Fragment() {
             ref.get().addOnSuccessListener { document->
                 HelpNutritionDialog.show(requireContext())
             }
-
         }
     }
 }

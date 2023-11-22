@@ -18,13 +18,16 @@
 
     <android.widget.Button
         android:id="@+id/LoginButtonDesign"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
         android:text="구글로 로그인 하기"
         android:textSize="15sp"
-        android:background="@drawable/profile_button_design"
-        android:drawableEnd="@drawable/baseline_keyboard_arrow_right_24"
-        android:paddingLeft="15dp"
+        android:background="@drawable/oauth_google"
+
+        android:drawableStart="@drawable/google_logo"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/logo"
         />
@@ -33,6 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
+
         android:layout_below="@+id/logo"
         android:visibility="gone"
         />
