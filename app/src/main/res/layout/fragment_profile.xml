@@ -6,10 +6,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/background"
+    android:paddingTop="7dp"
     >
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:orientation="vertical"
         >
         <TextView
             android:layout_width="wrap_content"
@@ -20,21 +24,11 @@
             android:textStyle="bold"
             android:layout_marginBottom="@dimen/top_menu_bottom_margin"
             />
-
-    </LinearLayout>
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="10dp"
-            >
-            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+                android:layout_marginBottom="40dp"
                 >
                 <TextView
                     android:id="@+id/userName"
@@ -44,299 +38,303 @@
                     android:textSize="20sp"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-
                     />
                 <android.widget.Button
                     android:id="@+id/profile_profile_button"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="30dp"
                     android:text="정보 수정"
+                    android:textSize="12sp"
                     android:textAlignment="textEnd"
-                    android:background="@drawable/profile_button_design"
+                    android:background="@drawable/user_information_correction_button"
                     android:drawableEnd="@drawable/baseline_keyboard_arrow_right_24"
                     />
             </LinearLayout>
+    </LinearLayout>
 
-
-            <GridLayout
-                android:id="@+id/daysGrid"
+    <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:columnCount="3"
-                android:padding="10dp"
-                >
+                android:background="@drawable/profile_background"
+                android:orientation="vertical"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingTop="@dimen/fifteen_dp"
+                android:elevation="10dp">
+                <GridLayout
+                    android:id="@+id/daysGrid"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:columnCount="3"
+                    android:padding="10dp">
+                    <TextView
+                        android:id="@+id/allDayText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:layout_gravity="center_horizontal"
 
-                <TextView
-                    android:id="@+id/allDayText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_columnWeight="1"
-                    android:layout_gravity="center_horizontal"
+                        android:text="@string/allDayText"
+                        android:textSize="@dimen/sub_title_size" />
 
-                    android:text="@string/allDayText"
-                    android:textSize="@dimen/sub_title_size"
-                    />
-                <TextView
-                    android:id="@+id/workoutDayText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_columnWeight="1"
-                    android:layout_gravity="center_horizontal"
-                    android:text="@string/workoutDayText"
-                    android:textSize="@dimen/sub_title_size"
-                    />
-                <TextView
-                    android:id="@+id/dietDayText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_columnWeight="1"
-                    android:layout_gravity="center_horizontal"
-                    android:text="@string/dietDayText"
-                    android:textSize="@dimen/sub_title_size"
-                    />
-                <TextView
-                    android:id="@+id/allDay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:text="@string/nullDays"
-                    android:textSize="@dimen/sub_title_size"
-                    />
-                <TextView
-                    android:id="@+id/workoutDay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    <TextView
+                        android:id="@+id/workoutDayText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:layout_gravity="center_horizontal"
+                        android:text="@string/workoutDayText"
+                        android:textSize="@dimen/sub_title_size" />
 
-                    android:layout_gravity="center_horizontal"
+                    <TextView
+                        android:id="@+id/dietDayText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:layout_gravity="center_horizontal"
+                        android:text="@string/dietDayText"
+                        android:textSize="@dimen/sub_title_size" />
 
-                    android:text="@string/nullDays"
-                    android:textSize="@dimen/sub_title_size"
-                    />
-                <TextView
-                    android:id="@+id/dietDay"
+                    <TextView
+                        android:id="@+id/allDay"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="@string/nullDays"
+                        android:textSize="@dimen/sub_title_size" />
+
+                    <TextView
+                        android:id="@+id/workoutDay"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:layout_gravity="center_horizontal"
+
+                        android:text="@string/nullDays"
+                        android:textSize="@dimen/sub_title_size" />
+
+                    <TextView
+                        android:id="@+id/dietDay"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+
+                        android:text="@string/nullDays"
+                        android:textSize="@dimen/sub_title_size" />
+                </GridLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_margin="@dimen/divider_margin"
+                    android:background="@color/divider"/>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-
-                    android:text="@string/nullDays"
-                    android:textSize="@dimen/sub_title_size"
-                    />
-            </GridLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="100"
-                android:layout_margin="@dimen/top_menu_bottom_margin"
-                android:background="?android:attr/listDivider" />
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_gravity="center"
-                android:layout_marginBottom="10dp"
-
-                >
-                <TextView
-                    android:id="@+id/weight"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_gravity="center"
-                    android:text="몸무게"
-                    android:textSize="14sp"
-                    />
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/helpButton1"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_gravity="center_vertical"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="horizontal"
 
-                    android:background="@drawable/baseline_help_24"
-                    android:layout_marginLeft="5dp"
+                    >
 
-                    />
+                    <TextView
+                        android:id="@+id/weight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:text="몸무게"
+                        android:textSize="14sp" />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/helpButton1"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center_vertical"
+
+                        android:layout_marginLeft="5dp"
+                        android:background="@drawable/baseline_help_24"
+                        />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/goalWeight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/goalWeight"
+                    android:textSize="@dimen/notice_text_size"
+                    android:layout_marginLeft="@dimen/ten_dp"/>
+
+                <TextView
+                    android:id="@+id/currentWeight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/currentWeight"
+                    android:textSize="@dimen/notice_text_size"
+                    android:layout_marginLeft="@dimen/ten_dp"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_margin="@dimen/divider_margin"
+                    android:background="@color/divider"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="18dp"
+                    android:orientation="horizontal"
+                    >
+                    <TextView
+                        android:id="@+id/q"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+
+                        android:text="일일 권장 칼로리와 영양소" />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/helpButton2"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center_vertical"
+
+                        android:layout_marginLeft="5dp"
+                        android:background="@drawable/baseline_help_24"
+
+                        />
+                </LinearLayout>
+
+
+                <ProgressBar
+                    android:id="@+id/progressBarCalorie"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/ten_dp"
+                    android:layout_marginRight="@dimen/ten_dp"
+                    android:layout_marginBottom="1dp"
+                    android:max="100"
+
+                    android:progress="0"
+                    android:progressDrawable="@drawable/progress_design"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/cal_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginLeft="@dimen/ten_dp"
+                    android:layout_marginRight="@dimen/ten_dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/progressText"
+                    android:textSize="10sp" />
+
+                <ProgressBar
+                    android:id="@+id/progressBarCarbohydrate"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="1dp"
+                    android:max="100"
+                    android:layout_marginLeft="@dimen/ten_dp"
+                    android:layout_marginRight="@dimen/ten_dp"
+                    android:progress="0"
+                    android:progressDrawable="@drawable/progress_design"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/carbo_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginLeft="@dimen/ten_dp"
+                    android:layout_marginRight="@dimen/ten_dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/progressText"
+                    android:textSize="10sp" />
+
+                <ProgressBar
+                    android:id="@+id/progressBarProtein"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/ten_dp"
+                    android:layout_marginRight="@dimen/ten_dp"
+                    android:layout_marginBottom="1dp"
+                    android:max="100"
+                    android:progress="0"
+                    android:progressDrawable="@drawable/progress_design"
+
+                    android:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/prot_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginLeft="@dimen/ten_dp"
+                    android:layout_marginRight="@dimen/ten_dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/progressText"
+                    android:textSize="10sp" />
+
+                <ProgressBar
+                    android:id="@+id/progressBarFat"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="1dp"
+                    android:max="100"
+                    android:layout_marginLeft="@dimen/ten_dp"
+                    android:layout_marginRight="@dimen/ten_dp"
+                    android:progress="0"
+                    android:progressDrawable="@drawable/progress_design"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/fat_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginLeft="@dimen/ten_dp"
+                    android:layout_marginRight="@dimen/ten_dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/progressText"
+                    android:textSize="10sp" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_margin="@dimen/divider_margin"
+                    android:background="@color/divider"/>
+                <GridLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:columnCount="2"
+                    android:paddingBottom="5dp">
+                    <android.widget.Button
+                        android:id="@+id/workoutCheckButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_columnWeight="1"
+                        android:text="오늘의 운동 체크"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp"
+                        android:background="@drawable/_checked_box"/>
+
+                    <android.widget.Button
+                        android:id="@+id/dietCheckButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_columnWeight="1"
+                        android:text="오늘의 식단 체크"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp"
+                        android:background="@drawable/_checked_box"/>
+                </GridLayout>
             </LinearLayout>
-
-            <TextView
-                android:id="@+id/goalWeight"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/goalWeight"
-                android:textSize="@dimen/notice_text_size"
-                />
-
-            <TextView
-                android:id="@+id/currentWeight"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:text="@string/currentWeight"
-                android:textSize="@dimen/notice_text_size"
-                />
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="100"
-                android:layout_margin="@dimen/top_menu_bottom_margin"
-                android:background="?android:attr/listDivider" />
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_gravity="center"
-                android:layout_marginBottom="10dp"
-
-                >
-                <TextView
-                    android:id="@+id/q"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-
-                    android:text="권장 칼로리와 영양소"
-                    />
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/helpButton2"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_gravity="center_vertical"
-
-                    android:background="@drawable/baseline_help_24"
-                    android:layout_marginLeft="5dp"
-
-                    />
-            </LinearLayout>
-
-
-            <ProgressBar
-                android:id="@+id/progressBarCalorie"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scaleY="@integer/five"
-                android:layout_marginBottom="1dp"
-
-                android:max="100"
-                android:progress="0"
-                android:visibility="visible"
-                />
-            <TextView
-                android:id="@+id/cal_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-
-                android:text="@string/progressText"
-                android:textSize="10sp"
-                android:layout_marginBottom="10dp"
-                />
-            <ProgressBar
-                android:id="@+id/progressBarCarbohydrate"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scaleY="@integer/five"
-                android:layout_marginBottom="1dp"
-
-                android:max="100"
-                android:progress="0"
-                android:visibility="visible"
-                />
-            <TextView
-                android:id="@+id/carbo_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-
-                android:text="@string/progressText"
-                android:textSize="10sp"
-                android:layout_marginBottom="10dp"
-                />
-            <ProgressBar
-                android:id="@+id/progressBarProtein"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scaleY="@integer/five"
-                android:layout_marginBottom="1dp"
-                android:max="100"
-                android:progress="0"
-                android:visibility="visible"
-                />
-            <TextView
-                android:id="@+id/prot_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-
-                android:text="@string/progressText"
-                android:textSize="10sp"
-                android:layout_marginBottom="10dp"
-                />
-            <ProgressBar
-                android:id="@+id/progressBarFat"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scaleY="@integer/five"
-                android:layout_marginBottom="1dp"
-
-                android:max="100"
-                android:progress="0"
-                android:visibility="visible"
-                />
-            <TextView
-                android:id="@+id/fat_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-
-                android:text="@string/progressText"
-                android:textSize="10sp"
-                android:layout_marginBottom="10dp"
-                />
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="100"
-                android:layout_margin="@dimen/top_menu_bottom_margin"
-                android:background="?android:attr/listDivider" />
-            <GridLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:columnCount="2"
-                >
-                <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_columnWeight="1"
-                android:text="오늘의 운동 체크"
-
-                />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_columnWeight="1"
-                    android:layout_gravity="center"
-
-                    android:text="오늘의 식단 체크"
-                    />
-                <android.widget.Button
-                    android:id="@+id/workoutCheckButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="운동 완료!"
-                    />
-                <android.widget.Button
-                    android:id="@+id/dietCheckButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="식단 완료!"
-                    /></GridLayout>
-
-        </LinearLayout>
-    </ScrollView>
-</LinearLayout>
+    </LinearLayout>

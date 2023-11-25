@@ -3,7 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
+    android:paddingTop="7dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -33,8 +36,9 @@
             android:textAlignment="textStart"
             android:background="@drawable/more_button_design"
             android:layout_margin="10dp"
-            android:padding="10dp"
+            android:padding="@dimen/more_button_padding"
             android:textSize="20sp"
+            android:drawableEnd="@drawable/arrow_back_ios"
             />
         <android.widget.Button
             android:id="@+id/moreLogoutButton"
@@ -44,8 +48,10 @@
             android:background="@drawable/more_button_design"
             android:text="@string/logout"
             android:layout_margin="10dp"
-            android:padding="10dp"
+            android:padding="@dimen/more_button_padding"
             android:textSize="20sp"
+            android:drawableEnd="@drawable/arrow_back_ios"
+
             />
 
     </LinearLayout>

@@ -16,9 +16,6 @@
     android:layout_above="@id/bottomNavBar"
     android:layout_alignParentTop="true"
     android:layout_centerHorizontal="true"
-    android:paddingLeft="15dp"
-    android:paddingRight="15dp"
-    android:paddingTop="7dp"
     />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView

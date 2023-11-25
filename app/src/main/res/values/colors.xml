@@ -9,4 +9,6 @@
     <color name="bottom_nav_icon_act">#525252</color>
     <color name="more_button">#eaeaea</color>
     <color name="notice_button_underline">#c2c2c2</color>
+    <color name="divider">#e3e5e5</color>
+    <color name="progress_background">#f5f7f7</color>
 </resources>

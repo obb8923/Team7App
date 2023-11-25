@@ -1,5 +1,6 @@
 package com.team7
 
+import android.animation.ObjectAnimator
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
@@ -11,7 +12,6 @@ import android.widget.EditText
 import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.google.android.play.integrity.internal.w
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -152,6 +152,8 @@ class ProfileFragment:Fragment() {
     private fun correctionButton(){
         val button = binding.profileProfileButton
         button.setOnClickListener {
+            toast?.cancel()
+
             // 다이얼로그 빌더 생성
             val builder = AlertDialog.Builder(context)
 
@@ -416,10 +418,18 @@ class ProfileFragment:Fragment() {
                 pBarProtein.max=p
                 pBarFat.max = f
                 //진행도Update
-                pBarCarbohydrate.progress = cp
-                pBarProtein.progress = pp
-                pBarFat.progress = fp
-                pBarCal.progress = kp
+                ObjectAnimator.ofInt(binding.progressBarCalorie, "progress", kp)
+                    .setDuration(500)
+                    .start()
+                ObjectAnimator.ofInt(binding.progressBarCarbohydrate, "progress", cp)
+                    .setDuration(500)
+                    .start()
+                ObjectAnimator.ofInt(binding.progressBarProtein, "progress", pp)
+                    .setDuration(500)
+                    .start()
+                ObjectAnimator.ofInt(binding.progressBarFat, "progress", fp)
+                    .setDuration(500)
+                    .start()
                 //오늘 먹은 영양소
                 val kps = kp.toString()
                 val pps = pp.toString()
@@ -430,7 +440,6 @@ class ProfileFragment:Fragment() {
                 val pPercent = roundDigit((pp.toDouble()/p*100),1).toString()
                 val cPercent = roundDigit((cp.toDouble()/c*100),1).toString()
                 val fPercent = roundDigit((fp.toDouble()/f*100),1).toString()
-
                 //Text 나타내기
                 textCalorie.text = getString(R.string.progressText,"칼로리",kPercent+"%",kps,(normalWeight*30).toInt().toString())
                 textCarbohydrate.text =getString(R.string.progressText,"탄수화물",cPercent+"%",cps,c.toString())
@@ -450,25 +459,24 @@ class ProfileFragment:Fragment() {
         ref.get().addOnSuccessListener {document->
             lastWorkout = document.getString("lastWorkout")!!
             days = document.getLong("workoutDay")!!.toInt()
-        }
+
         b.setOnClickListener {
             Log.d("운동버튼","운동버튼")
-
             if(lastWorkout!=formattedDate){
-
                 ref.update("lastWorkout",formattedDate)
                 ref.update("workoutDay",days+1)
+                workoutDaysUpdate(days+1)
             }else{
                 if(toast==null){
                     toast = Toast.makeText(getContext(),"오늘은 운동 체크 버튼을 이미 눌렀습니다.",Toast.LENGTH_SHORT)
                     toast?.show()
                 }else{
-                    toast =null
+                    toast?.cancel()
                     toast = Toast.makeText(getContext(),"오늘은 운동 체크 버튼을 이미 눌렀습니다.",Toast.LENGTH_SHORT)
                     toast?.show()
                 }
             }
-            workoutDaysUpdate(days+1)
+        }
         }
     }
     private fun dietCheck(){
@@ -479,24 +487,24 @@ class ProfileFragment:Fragment() {
         ref.get().addOnSuccessListener {document->
             lastDiet = document.getString("lastDiet")!!
             days = document.getLong("dietDay")!!.toInt()
-        }
+
         b.setOnClickListener {
             Log.d("식단버튼","식단버튼")
             if(lastDiet!=formattedDate){
                 ref.update("lastDiet",formattedDate)
                 ref.update("dietDay",days+1)
+                dietDaysUpdate(days+1)
             }else{
                 if(toast==null){
                     toast = Toast.makeText(getContext(),"오늘은 식단 체크 버튼을 이미 눌렀습니다.",Toast.LENGTH_SHORT)
                     toast?.show()
                 }else{
-                    toast =null
+                    toast?.cancel()
                     toast = Toast.makeText(getContext(),"오늘은 식단 체크 버튼을 이미 눌렀습니다.",Toast.LENGTH_SHORT)
                     toast?.show()
                 }
             }
-            dietDaysUpdate(days+1)
-        }
+        }}
     }
     private fun dietDaysUpdate(days:Int){
         val dietDay = binding.dietDay
@@ -510,6 +518,7 @@ class ProfileFragment:Fragment() {
         val b1 = binding.helpButton1
         val b2 = binding.helpButton2
         b1.setOnClickListener{
+            toast?.cancel()
             val ref = db.collection(uid).document("userInformation")
             ref.get().addOnSuccessListener { document->
                 val h = document.getDouble("height")!!.toFloat()
@@ -518,6 +527,7 @@ class ProfileFragment:Fragment() {
             }
         }
         b2.setOnClickListener {
+            toast?.cancel()
             val ref = db.collection(uid).document("userInformation")
             ref.get().addOnSuccessListener { document->
                 HelpNutritionDialog.show(requireContext())
