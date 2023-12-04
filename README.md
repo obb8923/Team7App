@@ -9,11 +9,26 @@
 
 ## 시작 가이드
 1. 요구사항
+   
+   Minimun SDK : 26 / Target SDK : 33
 2. 설치 및 실행
+> 1. 안드로이드 스튜디오를 설치합니다: [Android Studio 다운로드](https://developer.android.com/studio).
+> 2. 프로젝트를 클론합니다:
+
+   ```bash
+   git clone https://github.com/your-username/your-project.git
+   ```
 
 ## 주요 기능
 1. 사용자가 먹은 음식을 검색 없이 기록할 수 있다.
 2. 사용자의 정보(몸무게, 먹은 영양정보)를 직관적으로 볼 수 있다.
+
+   앱 화면 ->
+   ![입장](https://github.com/obb8923/Team7App/assets/59199893/ede9058a-1a19-45e1-9471-80c5a8f02255)
+  
+
+
+
 
 ## 사용한 기술
 * ### ide   <img src="https://img.shields.io/badge/android studio-3DDC84?style=for-the-badge&logo=androidstudio&logoColor=white">
@@ -21,18 +36,3 @@
 * ### design   <img src="https://img.shields.io/badge/figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white">
 * ### server   <img src="https://img.shields.io/badge/firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=white">
 * ### communication   <img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white"><img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white"><img src="https://img.shields.io/badge/notion-000000?style=for-the-badge&logo=notion&logoColor=white">
-
-
-
-
-
-들어가야하는 내용
-1.프로젝트명
-2. 프로젝트 설명
-여러분의 애플리케이션이 무엇을 하는지,
-왜 그 기술을 사용했는지,
-여러분이 당면했던 문제나 나중에 추가하고 싶은 기능이 무엇인지
-3. 목차
-4. 프로젝트 설치 및 실행 방법
-5. 프로젝트 사용 방법
-6. 라이센스
