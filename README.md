@@ -16,7 +16,7 @@
 > 2. 프로젝트를 클론합니다:
 
    ```bash
-   git clone https://github.com/your-username/your-project.git
+   git clone https://github.com/obb8923/Team7App.git
    ```
 
 ## 주요 기능
